@@ -25,7 +25,10 @@ const progress = document.getElementById("progress-bar");
 
 // events
 
+// get question on dom load
 document.addEventListener("DOMContentLoaded", getQuestion);
+// next button click
+nextBtn.addEventListener("click", validate);
 
 // functions
 
@@ -50,4 +53,54 @@ function getQuestion() {
   prevBtn.className = position ? "fas fa-arrow-left" : "fas fa-user";
 
   showQuestion();
+}
+
+// display question to user
+function showQuestion() {
+  inputGroup.style.opacity = 1;
+  inputProgress.style.transition = "";
+  inputProgress.style.width = "100%";
+}
+
+// hide question
+function hideQuestion() {
+  inputGroup.style.opacity = 0;
+  inputLabel.style.marginLeft = 0;
+  inputProgress.style.width = 0;
+  inputProgress.style.transition = "none";
+  inputGroup.style.border = null;
+}
+
+// transform to create shake motion
+function transform(x, y) {
+  formBox.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+// validate field
+function validate() {
+  // make sure patter matches if there is one
+  if (!inputField.value.match(questions[position].pattern || /.+/)) {
+    inputFail();
+  } else {
+    inputPass();
+  }
+}
+
+// field input fail
+function inputFail() {
+  formBox.className = "error";
+
+  // repeat shake motion - set i to number of shakes
+  for (let i = 0; i < 6; i++) {
+    setTimeout(transform, shakeTime * i, ((i % 2) * 2 - 1) * 20, 0);
+    setTimeout(transform, shakeTime * 6, 0, 0);
+    inputField.focus();
+  }
+}
+
+// field input passed
+function inputPass() {
+  formBox.className = "";
+  setTimeout(transform, shakeTime * 0, 0, 10);
+  setTimeout(transform, shakeTime * 1, 0, 0);
 }
